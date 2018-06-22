@@ -1,0 +1,4 @@
+#!/bin/bash
+
+git branch --merged | awk '{print $1}' | egrep '(bugfix|feature|hotfix)' | awk '{print "git branch -d " $1 " && git push --delete '"${USER}"' " $1 "\0"}' |tr -d "\n" | xargs -0 -n1 /bin/bash -c
+
