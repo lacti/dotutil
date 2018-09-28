@@ -1,4 +1,8 @@
 #!/bin/bash
 
-git branch --merged | awk '{print $1}' | egrep '(bugfix|feature|hotfix)' | awk '{print "git branch -d " $1 " && git push --delete '"${USER}"' " $1 "\0"}' |tr -d "\n" | xargs -0 -n1 /bin/bash -c
+for BRANCH in $(git branch --merged | awk '{print $1}' | egrep '(bugfix|feature|hotfix)'); do
+  echo "* delete: ${BRANCH}"
+  git branch -d "${BRANCH}" && \
+    (git push --delete "${USER}" "${BRANCH}" || true)
+done
 
