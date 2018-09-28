@@ -1,8 +1,19 @@
 #!/bin/bash
 
+git fetch --all
+for REMOTE in $(git remote -v | awk '{print $1}' | sort -u); do
+  git remote prune "${REMOTE}"
+done
+
 for BRANCH in $(git branch --merged | awk '{print $1}' | egrep '(bugfix|feature|hotfix)'); do
-  echo "* delete: ${BRANCH}"
-  git branch -d "${BRANCH}" && \
+  echo "-------------------------"
+  echo "- Delete: ${BRANCH}"
+  git checkout "${BRANCH}" && \
+    (git pull || true) && \
+    git checkout - && \
+    git branch -d "${BRANCH}" && \
     (git push --delete "${USER}" "${BRANCH}" || true)
 done
+
+git gc
 
