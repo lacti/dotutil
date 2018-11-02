@@ -9,7 +9,7 @@ fix_dependency() {
   local ADD_OPTION="$2"
 
   for PACKAGE in $(cat package.json | jq -r ".${KEY} | keys[]"); do
-    PINNED="$(grep "${PACKAGE}@" "${VERSION_FILE}")"
+    PINNED="$(grep "${PACKAGE}@" "${VERSION_FILE}" | tr -d "^")"
     if [ ! -z "${PINNED}" ]; then
       echo "${PINNED}"
       yarn add ${ADD_OPTION} "${PINNED}"
